@@ -79,7 +79,7 @@ I tried with different combinations of parameters, tunning C and gamma, however,
 
 In section **"Implement a sliding-window technique..."** after defining some parameters about the classifier, the ``find_cars()`` function defined in ``lesson_functions.py`` is called. 
 
-Due to the characteristics of the image, I decided not to search for cars in the upper part of the image. This, together with the decision of downscaling the image by a 1.5 factor, resulted in a speedup of per-frame time processing.
+Due to the characteristics of the image, I decided not to search for cars in the upper part of the image and in a small fraction at the botton corresponding with the hood of the car. This, together with the decision of analyzing the image in just one scale (1 factor, original size), resulted in a speedup of per-frame time processing.
 
 Just analyzing one scale seems enough to find all the cars, using a properly overlap of 2 cells per step.
 
@@ -97,11 +97,11 @@ Cars seemed to be well detected, however, many false positives appears, hence a 
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
 
-Here's a [link to my video result](https://youtu.be/qO3UqXdmoL0)
+Here's a [link to my video result](https://youtu.be/DuU2Qejv9H0)
 
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=qO3UqXdmoL0
-" target="_blank"><img src="http://img.youtube.com/vi/qO3UqXdmoL0/0.jpg" 
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=DuU2Qejv9H0
+" target="_blank"><img src="http://img.youtube.com/vi/DuU2Qejv9H0/0.jpg" 
 alt="Thumbnail of Vehicle Detection project" width="240" height="180" border="10" /></a>
 
 
@@ -116,6 +116,22 @@ The false positive filter is implemented in section **"Run your pipeline on a vi
 * Goto step 1 until we reach total_ frames - buffer_ size.
 * As the result of this algorithm is a list of detections (``video_bounding_boxes``) with a length shorter than the number of frames that compose the video(exactly buffer_size less), we need to find a way to overcome this. If the frame rate is high enough and the buffer size is small enough we can assume that the images will not be too different and we can copy the detections from the last available image to use them in the final frames.
 * After this process, the video is read again from the beginning just to draw the cleaned detections stored in ``video_bounding_boxes`` list.
+
+While this approach was very nice, there were still too much false positives (at least for my standards), so I implemented some post-processing filters: area filter and aspect ratio filter.
+
+* Area filter: some of the false positives detected had a very small area, hence it was a good idea to remove those that were incompatible with car's size.
+
+![Area example](./images4doc/area_filter.jpg)
+
+![Area example](./images4doc/area_distribution.png)
+
+After some carefully analysis, those detection with an area below 400 pixels were rejected.
+
+* Aspect ratio filter: some of the false positives detected had an aspect ratio clearly incompatible with the shape of any car. Those detections with an aspect ratio below or equal to 0.5 (height twice bigger than width) were rejected.
+
+![Area example](./images4doc/aspect_ratio_filter.jpg)
+
+![Area example](./images4doc/aspect_ratio_distribution.png)
 
 
 ### Here are six frames and their corresponding heatmaps:
