@@ -1,4 +1,4 @@
-##Writeup Report
+## Writeup Report
 
 
 **Vehicle Detection Project**
@@ -14,18 +14,18 @@ The goals / steps of this project are the following:
 
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
-###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
+### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
 ---
-###Writeup / README
+### Writeup / README
 
-####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Vehicle-Detection/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
+#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Vehicle-Detection/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
 
 You're reading it!
 
-###Histogram of Oriented Gradients (HOG)
+### Histogram of Oriented Gradients (HOG)
 
-####1. Explain how (and identify where in your code) you extracted HOG features from the training images.
+#### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
 The code for this step appears in section **Exploring the dataset** in the notebook ``main.ipynb``
 
@@ -41,7 +41,7 @@ Both classes are well balanced... but for this concrete application we need to r
 Later, in **"Perform a Histogram of Oriented Gradients (HOG) feature extraction.."** section, HOG features and color features are extracted.
 
 
-####2. Explain how you settled on your final choice of HOG parameters.
+#### 2. Explain how you settled on your final choice of HOG parameters.
 
 Despite HOG features are very robuts, seemed to be a good idea to include color features. Cars can come in many different colors, but asphalt remains very similar all the time. Hence, I tried different combinations of the methods used in class.
 
@@ -64,7 +64,7 @@ hist_bins = 32
 I could include HOG features for all the channels, but seemed to me very redundant. In fact, I think the current feature vector of 4932 elements has already a lot of redundancy. I bet that carefully applying PCA will not harm the accuracy of the classifier but speed up training and testing time.
 
 
-####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
+#### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
 In the same section as before, i.e. **"Perform a Histogram of Oriented Gradients (HOG) feature extraction.."**  in ``main.ipynb`` I trained a linear SVM classifier with a RBF kernel using the default parameters.
 
@@ -73,9 +73,9 @@ I tried with different combinations of parameters, tunning C and gamma, however,
 * Test Accuracy of SVC =  0.9862
 * Train Accuracy of SVC =  1.0
 
-###Sliding Window Search
+### Sliding Window Search
 
-####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+#### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
 In section **"Implement a sliding-window technique..."** after defining some parameters about the classifier, the ``find_cars()`` function defined in ``lesson_functions.py`` is called. 
 
@@ -85,7 +85,7 @@ Just analyzing one scale seems enough to find all the cars, using a properly ove
 
 ![Detection example](./images4doc/example_detection.png)
 
-####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
+#### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
 ![Detection and heatmaps](./images4doc/detections_and_heatmaps.png)
 
@@ -95,7 +95,7 @@ Cars seemed to be well detected, however, many false positives appears, hence a 
 
 ### Video Implementation
 
-####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
+#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
 
 Here's a [link to my video result](https://youtu.be/qO3UqXdmoL0)
 
@@ -106,7 +106,7 @@ alt="Thumbnail of Vehicle Detection project" width="240" height="180" border="10
 
 
 
-####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
+#### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
 The false positive filter is implemented in section **"Run your pipeline on a video stream.."** included in ``main.ipynb``. The strategy is as follows:
 
@@ -131,9 +131,9 @@ This combined heatmap (on the left) is computed as a sum of all the heatmaps in 
 
 ---
 
-###Discussion
+### Discussion
 
-####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
 The biggest issue found in this project is related with execution time. The inference step is extremely slow to be applied in a self-driving car with real-time requirements. While HOG features are very nice, they are costly too. And the sliding-window approach is very inefficient. One possible solution would be porting the code to C++ instead of using Python. That solution, followed by some kind of region proposal system that only extract features in places where finding cars is plausible, will highly speed up the process. An asphalt detector could help for this. Other approaches may include trying recent Deep Learning techniques such as RCNN, Yolo or SSD.
 
